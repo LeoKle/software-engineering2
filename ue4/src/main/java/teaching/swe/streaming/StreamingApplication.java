@@ -6,29 +6,26 @@ import teaching.swe.streaming.fraud.FraudDetection;
 import teaching.swe.streaming.fraud.IFraudDetection;
 import teaching.swe.streaming.recommender.IRecommenderSystem;
 import teaching.swe.streaming.recommender.RecommenderSystem;
+import teaching.swe.streaming.LoginManager;
 
 public class StreamingApplication {
 
-    private String[][] userCredentials = {
-            { "User1", "PasswortA" },
-            { "User2", "PasswortB" },
-            { "User3", "PasswortC" },
-            { "User4", "PasswortC" }
-    };
-
     private final IRecommenderSystem rs;
     private final IFraudDetection fd;
+    private final LoginManager lm;
 
     private int volumeLevel = 50;
 
     public StreamingApplication() {
         this.rs = new RecommenderSystem();
         this.fd = new FraudDetection();
+        this.lm = new LoginManager();
     }
 
     public StreamingApplication(IRecommenderSystem rs, IFraudDetection fd) {
         this.rs = rs;
         this.fd = fd;
+        this.lm = new LoginManager();
     }
 
     public int setVolume(int level) {
@@ -53,24 +50,5 @@ public class StreamingApplication {
         response.setRecommendations(recommendations);
 
         return response;
-    }
-
-    /**
-     * Gibt true zurück, wenn das User/Passwort-Paar in
-     * userCredentials enthalten ist. Andernfalls wird false zurückgegeben.
-     */
-    private boolean checkAuth(String user, String password) {
-        // TODO: implementieren. Dabei userCredentials verwenden.
-
-        for (String[] credentials : this.userCredentials) {
-            final boolean isUser = credentials[0].equals(user);
-            if (!isUser)
-                continue;
-
-            final boolean correctPassword = credentials[1].equals(password);
-            return correctPassword;
-        }
-
-        return false;
     }
 }
