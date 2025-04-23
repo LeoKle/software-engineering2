@@ -6,13 +6,14 @@ import teaching.swe.streaming.fraud.FraudDetection;
 import teaching.swe.streaming.fraud.IFraudDetection;
 import teaching.swe.streaming.recommender.IRecommenderSystem;
 import teaching.swe.streaming.recommender.RecommenderSystem;
+import teaching.swe.streaming.ILoginManager;
 import teaching.swe.streaming.LoginManager;
 
 public class StreamingApplication {
 
     private final IRecommenderSystem rs;
     private final IFraudDetection fd;
-    private final LoginManager lm;
+    private final ILoginManager lm;
 
     private int volumeLevel = 50;
 
@@ -22,10 +23,10 @@ public class StreamingApplication {
         this.lm = new LoginManager();
     }
 
-    public StreamingApplication(IRecommenderSystem rs, IFraudDetection fd) {
+    public StreamingApplication(IRecommenderSystem rs, IFraudDetection fd, ILoginManager lm) {
         this.rs = rs;
         this.fd = fd;
-        this.lm = new LoginManager();
+        this.lm = lm;
     }
 
     public int setVolume(int level) {
@@ -44,6 +45,8 @@ public class StreamingApplication {
     public LoginResponse login(LoginRequest request) {
         boolean successful = !fd.isFraud(request);
         List<String> recommendations = rs.recommend(request);
+
+        this.lm.checkAuth(null, null);
 
         LoginResponse response = new LoginResponse();
         response.setSuccessful(successful);

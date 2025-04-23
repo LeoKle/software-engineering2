@@ -9,6 +9,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import teaching.swe.streaming.ILoginManager;
+import teaching.swe.streaming.LoginManagerMock;
 import teaching.swe.streaming.LoginRequest;
 import teaching.swe.streaming.LoginResponse;
 import teaching.swe.streaming.StreamingApplication;
@@ -26,7 +28,8 @@ public class StreamingApplicationAndRecommenderSystemIntegrationTest {
     public void setUp() {
         IRecommenderSystem rs = new RecommenderSystem();
         IFraudDetection fd = new FraudDetectionMock();
-        streamingApplication = new StreamingApplication(rs, fd);
+        ILoginManager lm = new LoginManagerMock(true);
+        streamingApplication = new StreamingApplication(rs, fd, lm);
 
         request = new LoginRequest();
         request.setLocation("DE");

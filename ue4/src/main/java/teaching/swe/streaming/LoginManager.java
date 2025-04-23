@@ -1,6 +1,6 @@
 package teaching.swe.streaming;
 
-public class LoginManager {
+public class LoginManager implements ILoginManager {
     private String[][] userCredentials = {
             { "User1", "PasswortA" },
             { "User2", "PasswortB" },
@@ -8,6 +8,7 @@ public class LoginManager {
             { "User4", "PasswortC" }
     };
 
+    @Override
     public boolean checkAuth(String user, String password) {
         for (String[] credentials : this.userCredentials) {
             final boolean isUser = credentials[0].equals(user);
