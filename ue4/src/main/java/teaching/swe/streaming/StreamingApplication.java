@@ -10,12 +10,12 @@ import teaching.swe.streaming.recommender.RecommenderSystem;
 public class StreamingApplication {
 
     private String[][] userCredentials = {
-        {"User1", "PasswortA"},
-        {"User2", "PasswortB"},
-        {"User3", "PasswortC"},
-        {"User4", "PasswortC"}
+            { "User1", "PasswortA" },
+            { "User2", "PasswortB" },
+            { "User3", "PasswortC" },
+            { "User4", "PasswortC" }
     };
-    
+
     private final IRecommenderSystem rs;
     private final IFraudDetection fd;
 
@@ -26,7 +26,7 @@ public class StreamingApplication {
         this.fd = new FraudDetection();
     }
 
-    public StreamingApplication (IRecommenderSystem rs, IFraudDetection fd) {
+    public StreamingApplication(IRecommenderSystem rs, IFraudDetection fd) {
         this.rs = rs;
         this.fd = fd;
     }
@@ -45,7 +45,7 @@ public class StreamingApplication {
     }
 
     public LoginResponse login(LoginRequest request) {
-        boolean successful = !fd.isFraud(request); 
+        boolean successful = !fd.isFraud(request);
         List<String> recommendations = rs.recommend(request);
 
         LoginResponse response = new LoginResponse();
@@ -62,6 +62,15 @@ public class StreamingApplication {
     private boolean checkAuth(String user, String password) {
         // TODO: implementieren. Dabei userCredentials verwenden.
 
-        return true;
+        for (String[] credentials : this.userCredentials) {
+            final boolean isUser = credentials[0].equals(user);
+            if (!isUser)
+                continue;
+
+            final boolean correctPassword = credentials[1].equals(password);
+            return correctPassword;
+        }
+
+        return false;
     }
 }
