@@ -30,7 +30,7 @@ public class StreamingApplication {
     }
 
     public int setVolume(int level) {
-        if (level <= 0 || level > 100) {
+        if (level < 0 || level > 100) {
             return -1;
         } else {
             this.volumeLevel = level;
