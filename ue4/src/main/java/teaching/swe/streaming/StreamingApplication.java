@@ -43,15 +43,20 @@ public class StreamingApplication {
     }
 
     public LoginResponse login(LoginRequest request) {
-        boolean successful = !fd.isFraud(request);
-        List<String> recommendations = rs.recommend(request);
+        final boolean isFraud = fd.isFraud(request);
+        final boolean authSuccessful = lm.checkAuth(request.getUserName(), request.getPassword());
 
-        this.lm.checkAuth(null, null);
-
+        final boolean validRequest = authSuccessful && !isFraud;
         LoginResponse response = new LoginResponse();
-        response.setSuccessful(successful);
+        response.setSuccessful(validRequest);
+
+        if (!validRequest)
+            return response;
+
+        List<String> recommendations = rs.recommend(request);
         response.setRecommendations(recommendations);
 
         return response;
     }
+
 }
