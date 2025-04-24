@@ -59,9 +59,7 @@ public class StreamingApplication {
      * Gibt true zurück, wenn das User/Passwort-Paar in
      * userCredentials enthalten ist. Andernfalls wird false zurückgegeben.
      */
-    private boolean checkAuth(String user, String password) {
-        // TODO: implementieren. Dabei userCredentials verwenden.
-
+    public boolean checkAuth(String user, String password) {
         for (String[] credentials : this.userCredentials) {
             final boolean isUser = credentials[0].equals(user);
             if (!isUser)
