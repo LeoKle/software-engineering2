@@ -2,6 +2,7 @@ package teaching.swe.streaming;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Arrays;
 
@@ -77,7 +78,7 @@ public class StreamingApplicationTest {
     }
 
     @Test
-    public void testLogin() {
+    public void testLoginValid() {
         IRecommenderSystem rs = new RecommenderSystemMock();
         IFraudDetection fd = new FraudDetectionMock();
         ILoginManager lm = new LoginManagerMock(true);
@@ -92,5 +93,23 @@ public class StreamingApplicationTest {
 
         assertTrue(response.isSuccessful());
         assertEquals(Arrays.asList("Dummy Movie A"), response.getRecommendations());
+    }
+
+    @Test
+    public void testLoginInvalid() {
+        IRecommenderSystem rs = new RecommenderSystemMock();
+        IFraudDetection fd = new FraudDetectionMock();
+        ILoginManager lm = new LoginManagerMock(false);
+        StreamingApplication sa = new StreamingApplication(rs, fd, lm);
+
+        LoginRequest request = new LoginRequest();
+        request.setLocation("DE");
+        request.setUserName("Test User");
+        request.setPassword("Test PWD");
+
+        LoginResponse response = sa.login(request);
+
+        assertFalse(response.isSuccessful());
+        assertTrue(response.getRecommendations().isEmpty());
     }
 }
