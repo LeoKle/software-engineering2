@@ -5,13 +5,18 @@ import org.junit.jupiter.api.Test;
 
 public class LoginManagerTest {
     @Test
-    public void testCheckAuth() {
+    public void testCheckAuthValid() {
         LoginManager lm = new LoginManager();
 
         Assertions.assertTrue(lm.checkAuth("User1", "PasswortA"));
         Assertions.assertTrue(lm.checkAuth("User2", "PasswortB"));
         Assertions.assertTrue(lm.checkAuth("User3", "PasswortC"));
         Assertions.assertTrue(lm.checkAuth("User4", "PasswortC"));
+    }
+
+    @Test
+    public void testCheckAuthInvalid() {
+        LoginManager lm = new LoginManager();
 
         Assertions.assertFalse(lm.checkAuth("User", "PasswortA"));
         Assertions.assertFalse(lm.checkAuth("User2", "PasswortD"));
