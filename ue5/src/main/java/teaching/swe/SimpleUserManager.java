@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleUserManager {
-    private List<String> users = new ArrayList<String>();
+    protected List<String> users = new ArrayList<String>();
 
     public SimpleUserManager() {
     }
