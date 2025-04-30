@@ -10,6 +10,10 @@ public class UserManagerWithAudit extends SimpleUserManager {
         this.logger = logger;
     }
 
+    public void changeLogger(IAuditLog logger) {
+        this.logger = logger;
+    }
+
     @Override
     public void addUser(String name) {
         if (name == null)
