@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import hsdinflab.swe.EmailChecker;
 import hsdinflab.swe.PasswordChecker;
 import hsdinflab.swe.RegistrationValidator;
-import hsdinflab.swe.UsernameChecker;
+//import hsdinflab.swe.UsernameChecker;
 import hsdinflab.swe.mocks.UsernameCheckerMock;
 
 public class RegistrationValidatorIntegration {
