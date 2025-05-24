@@ -35,6 +35,6 @@ public class UsernameChecker {
     }
 
     private boolean isValidChar(char c) {
-        return Character.isLetterOrDigit(c) || c == '_';
+        return Character.isLetterOrDigit(c) || c == '_'; // allows any unicode letter or digit, and underscore
     }
 }
