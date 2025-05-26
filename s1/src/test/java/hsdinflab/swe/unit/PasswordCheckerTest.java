@@ -56,6 +56,34 @@ public class PasswordCheckerTest {
             boolean result = passwordChecker.isValid(password);
             assertFalse(result);
         }
+
+        @Test
+        public void testPasswordWithoutUpper() {
+            String password = "abcdef1!";
+            boolean result = passwordChecker.isValid(password);
+            assertFalse(result);
+        }
+
+        @Test
+        public void testPasswordWithoutLower() {
+            String password = "ABCDEF1!";
+            boolean result = passwordChecker.isValid(password);
+            assertFalse(result);
+        }
+
+        @Test
+        public void testPasswordWithoutDigit() {
+            String password = "Abcdefg!";
+            boolean result = passwordChecker.isValid(password);
+            assertFalse(result);
+        }
+
+        @Test
+        public void testPasswordWithoutSpecial() {
+            String password = "ABCDEF1g";
+            boolean result = passwordChecker.isValid(password);
+            assertFalse(result);
+        }
     }
 
     @Nested
