@@ -87,14 +87,14 @@ public class EmailCheckerTest {
 
         @Test
         public void testOnEmailWithoutLocal() {
-            String email = "@domain.de";
+            String email = " @withoutlocal.de";
             boolean result = emailChecker.isValid(email);
             assertFalse(result);
         }
 
         @Test
         public void testOnEmailWithoutDomain() {
-            String email = "name@";
+            String email = "withoutDomain@";
             boolean result = emailChecker.isValid(email);
             assertFalse(result);
         }
@@ -116,6 +116,13 @@ public class EmailCheckerTest {
         @Test
         public void testOnEmailWithSpaces() {
             String email = "name1 @name2.com";
+            boolean result = emailChecker.isValid(email);
+            assertFalse(result);
+        }
+
+        @Test
+        public void testOnEmailWithoutDomainOrLocalPart() {
+            String email = "@";
             boolean result = emailChecker.isValid(email);
             assertFalse(result);
         }
