@@ -1,0 +1,10 @@
+stateDiagram
+        [*] --> bereit
+        bereit --> spielt: Song gestartet
+        spielt --> beendet: Song beendet
+        spielt --> bereit: Song gestoppt
+        spielt --> pausiert: Song pausiert
+        pausiert --> spielt: Song fortgesetzt
+
+        spielt --> spielt: vorspulen / zurückspulen
+        pausiert --> pausiert: vorspulen / zurückspulen
