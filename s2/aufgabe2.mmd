@@ -1,0 +1,17 @@
+classDiagram
+class WeatherObserver 
+<<interface>> WeatherObserver
+WeatherObserver : +update(weatherData)
+
+class ConcreteWeatherObserver
+WeatherObserver <|-- ConcreteWeatherObserver
+ConcreteWeatherObserver : -WeatherStation
+ConcreteWeatherObserver : +update(weatherData)
+
+class WeatherStation
+WeatherStation --> WeatherObserver
+WeatherStation : -observers[] 
+WeatherStation : +addObserver(observer)
+WeatherStation : +removeObserver(observer)
+WeatherStation : +notifyObservers()
+WeatherStation : +setMeasurements(temperature, humidity, pressure)
