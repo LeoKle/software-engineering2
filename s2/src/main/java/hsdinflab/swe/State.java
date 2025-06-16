@@ -39,7 +39,7 @@ public class State {
         songState = SongState.STOPPED;
     }
 
-    public void foward_backward() {
+    public void forward_backward() {
         if (songState != SongState.PLAYING && songState != SongState.PAUSED) {
             throw new IllegalStateException("Cannot forward or backward when not playing or paused");
         }
