@@ -36,6 +36,14 @@ public class State {
             throw new IllegalStateException("Cannot stop when already stopped");
         }
 
+        songState = SongState.READY;
+    }
+
+    public void onSongEnd() {
+        if (songState != SongState.PLAYING) {
+            throw new IllegalStateException("Cannot end when not playing ");
+        }
+
         songState = SongState.STOPPED;
     }
 
