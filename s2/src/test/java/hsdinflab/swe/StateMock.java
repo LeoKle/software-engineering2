@@ -21,11 +21,17 @@ public class StateMock {
     @Test
     public void testPause() {
         state.play();      // bereit → spielt
-        state.pause();     // spielt → pausiert
-        state.play();      // pausiert → spielt
-        state.stop();      // spielt → bereit
         State.SongState resultState = state.getSongState();
-        assertEquals(State.SongState.READY, resultState);
+        assertEquals(State.SongState.PLAYING, resultState);
+        state.pause();     // spielt → pausiert
+        State.SongState resultState1 = state.getSongState();
+        assertEquals(State.SongState.PAUSED, resultState1);
+        state.play();      // pausiert → spielt
+        State.SongState resultState2 = state.getSongState();
+        assertEquals(State.SongState.PLAYING, resultState2);
+        state.stop();      // spielt → bereit
+        State.SongState resultState3 = state.getSongState();
+        assertEquals(State.SongState.READY, resultState3);
     }
 
     @Test
