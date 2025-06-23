@@ -1,17 +1,23 @@
 classDiagram
-class WeatherObserver 
-<<interface>> WeatherObserver
-WeatherObserver : +update(weatherData)
+class IWeatherObserver 
+<<interface>> IWeatherObserver
+IWeatherObserver : +update(weatherData)
 
-class ConcreteWeatherObserver
-WeatherObserver <|-- ConcreteWeatherObserver
-ConcreteWeatherObserver : -WeatherStation
-ConcreteWeatherObserver : +update(weatherData)
+class ConcreteIWeatherObserver
+IWeatherObserver <|-- ConcreteIWeatherObserver
+ConcreteIWeatherObserver : -WeatherStation
 
 class WeatherStation
-WeatherStation --> WeatherObserver
+IWeatherSubject <|.. WeatherStation
+WeatherStation --> "1..*" IWeatherObserver : observers
 WeatherStation : -observers[] 
-WeatherStation : +addObserver(observer)
-WeatherStation : +removeObserver(observer)
-WeatherStation : +notifyObservers()
+WeatherStation : -temperature
+WeatherStation : -humidity
+WeatherStation : -pressure
 WeatherStation : +setMeasurements(temperature, humidity, pressure)
+
+class IWeatherSubject
+<<interface>> IWeatherSubject
+IWeatherSubject : +addObserver(observer)
+IWeatherSubject : +removeObserver(observer)
+IWeatherSubject : +notifyObservers()
