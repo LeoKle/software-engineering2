@@ -3,24 +3,23 @@ package hsdinflab.swe;
 import java.util.ArrayList;
 import java.util.List;
 
-import hsdinflab.swe.IWeatherObserver;
-
-public class WeatherStation {
-    public WeatherStation() {
-    }
+public class WeatherStation implements IWeatherSubject {
 
     private List<IWeatherObserver> observers = new ArrayList<>();
     private WeatherData weatherData = new WeatherData();
 
-    public void subscribe(IWeatherObserver observer) {
+    @Override
+    public void addObserver(IWeatherObserver observer) {
         observers.add(observer);
     }
 
-    public void unsubscribe(IWeatherObserver observer) {
+    @Override
+    public void removeObserver(IWeatherObserver observer) {
         observers.remove(observer);
     }
 
-    private void onNewData() {
+    @Override
+    public void notifyObservers() {
         for (IWeatherObserver observer : observers) {
             observer.updateWeather(weatherData);
         }
@@ -30,6 +29,6 @@ public class WeatherStation {
         weatherData.temperature = temperature;
         weatherData.humidity = humidity;
         weatherData.pressure = pressure;
-        onNewData();
+        notifyObservers();
     }
 }
