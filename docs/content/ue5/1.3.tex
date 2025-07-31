@@ -1,0 +1,61 @@
+\subsection*{Aufgabe 1.3: Erweiterung um Protokollierung auf der Konsole}
+
+\begin{lstlisting}[style=javastyle, caption={Erweiterung der UserManagerWithAudit Klasse um eine changeLogger Methode}]
+public class UserManagerWithAudit extends SimpleUserManager {
+    IAuditLog logger;
+    [...]
+    public void changeLogger(IAuditLog logger) {
+        this.logger = logger;
+    }
+[...]
+\end{lstlisting}
+\begin{lstlisting}[style=javastyle, caption={ConsoleAuditLog zur Protokollierung auf der Konsole}]
+package teaching.swe;
+
+import java.util.List;
+
+public class ConsoleAuditLog implements IAuditLog {
+    @Override
+    public void log(LogEntry entry) {
+        System.out.println("Log: " + entry.type.toString() + " User: " + entry.name);
+    }
+
+    @Override
+    public List<LogEntry> getLogs() {
+        return null;
+    }
+}
+
+\end{lstlisting}
+\begin{lstlisting}[style=javastyle, caption={Tests für die changeLogger() Methode}]
+package teaching.swe;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class UserManagerWithConsoleAndMemoryAuditTest {
+    private UserManagerWithAudit um;
+    private IAuditLog memoryLogger;
+    private IAuditLog consoleLogger;
+
+    @BeforeEach
+    void setUp() {
+        this.memoryLogger = new InMemoryAuditLog();
+        this.consoleLogger = new ConsoleAuditLog();
+        this.um = new UserManagerWithAudit(memoryLogger);
+    }
+
+    @Test
+    void testChangeLogger() {
+        this.um.changeLogger(this.consoleLogger);
+
+        // no exception should be thrown after changing the logger and a log is caused
+        this.um.addUser("test");
+        this.um.removeUser("test");
+
+        this.um.changeLogger(this.memoryLogger);
+        this.um.addUser("test");
+        this.um.removeUser("test");
+    }
+}
+\end{lstlisting}

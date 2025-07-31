@@ -1,0 +1,63 @@
+\subsection*{Aufgabe 1: Ableitung von User Stories}
+
+\subsubsection*{EmailChecker}
+Als \textbf{[Nutzer]} möchte ich, \textbf{[dass meine E-Mail auf Richtigkeit geprüft wird]}, damit ich \textbf{[keine falsche angebe / kontaktiert werden kann]}.
+
+Akzeptanzkriterien:
+\begin{itemize}
+    \item Leerer String wird abgelehnt
+    \item E-Mail beinhaltet genau ein \gq{@}-Zeichen
+    \item E-Mail beinhaltet gültigen Teil vor dem \gq{@}-Zeichen:
+    \\kein leerer String
+    % \\1-63 Zeichen
+    % \\A-Z,a-z,0-9
+    \item E-Mail beinhaltet gültigen Teil nach dem \gq{@}-Zeichen:
+    \\kein leerer String
+    % \\1-63 Zeichen
+    % \\A-Z,a-z,0-9
+    \\beinhaltet Punkt
+    \\endet nicht mit einem Punkt
+    \item beinhaltet keine Leerzeichen
+    \item E-Mail wird akzeptiert (gilt als gültig), wenn alle Kriterien erfüllt sind
+\end{itemize}
+
+\subsubsection*{PasswordChecker}
+Als \textbf{[Team]} möchten wir \textbf{[Anforderungen an Passwörter festlegen]}, damit wir \textbf{[unseren Nutzer eine gewisse Sicherheit bieten können]}.
+
+Akzeptanzkriterien:
+\begin{itemize}
+    \item Leere Passwörter sind nicht erlaubt TODO: sind sie anscheinend doch?
+    \item Null wird abgelehnt
+    \item Passwörter beinhalten min. 8 Zeichen
+    \item Passwörter beinhalten max. 20 Zeichen
+    \item Passwörter muss ein Großbuchstabe beinhalten
+    \item Passwörter muss ein Kleinbuchstabe beinhalten
+    \item Passwörter muss eine Zahl beinhalten
+    \item Passwörter muss ein Sonderzeichen beinhalten
+    \item Passwort wird akzeptiert, wenn es alle Kriterien erfüllt
+\end{itemize}
+
+\subsubsection*{RegistrationValidator}
+Als \textbf{[System]} möchte ich \textbf{[Registrierungsdaten validieren können]}, damit ich \textbf{[nur korrekte Nutzerdaten gespeichert werden].}
+
+Akzeptanzkriterien:
+\begin{itemize}
+    \item Nutzt EmailChecker \\ und erfüllt dessen Kriterien
+    \item Nutzt PasswordChecker \\ und erfüllt dessen Kriterien
+    \item Nutzt UsernameChecker \\ und erfüllt dessen Kriterien
+    \item Nur erfolgreich wenn alle drei Komponenten (Username, Email, Password) gültig sind
+    \item Implementierungen (Subklassen) sind nicht zugänglich außer über eigene Public Methoden, welche die Methoden dieser aufrufen
+\end{itemize}
+
+\subsubsection*{UsernameChecker}
+Als \textbf{[registrierter Nutzer]} möchte ich \textbf{[einen gültigen Benutzernamen wählen können]}, damit ich \textbf{[mich eindeutig identifizieren kann].}
+
+Akzeptanzkriterien:
+\begin{itemize}
+    \item Null wird abgelehnt
+    \item Username muss min. 4 Zeichen beinhalten
+    \item Username darf max. 15 Zeichen beinhalten
+    \item erlaubte Zeichen A-Z,a-z,0-9, Unterstrich \_
+    \item keine Leerzeichen oder Sonderzeichen (außer \gq{\_})
+    \item Username wird akzeptiert (gilt als gültig), wenn alle Kriterien erfüllt sind    
+\end{itemize}

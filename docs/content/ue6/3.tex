@@ -1,0 +1,17 @@
+\section*{Aufgabe 3: Risiken und Maßnahmen bei der Softwareintegration}
+
+\subsection*{3.1: Risiken der Entwicklung des Zahlungsmoduls im nächsten Sprint}
+
+Die Entwicklung des Zahlungsmodul mit der Abhängigkeit des extern entwickelteten Authentifizierungsmoduls birgt mehrere Risiken.
+Da das Modul noch nicht fertig ist oder sogar dementsprechend instabil, kann dies die eigene Entwicklung behindern. Änderungen oder Verzögerungen im Authentifizierungsmodul können direkten Einfluss auf das Zahlungsmodul haben.
+
+Sollte noch keine Schnittstelle für das Authentifizierungsmodul definiert oder dokumentiert sein, wird dessen Integration stark verkompliziert. Unter Umständen kommt es zu Mehraufwand, da Annahmen über Funktionsweisen falsch waren.
+
+Die fehlende Schnittstelle verhindert außerdem, dass das Modul gemockt werden kann. So sinkt die Testbarkeit des eigenen Moduls. Eventuelle Fehler, die bei der Integration beider Module entstehen könnten so erst sehr spät entdeckt werden.
+
+\subsection*{3.2: Mitigation der Risiken}
+
+Als technische Maßnahme zur Mitigation sollte eine Vereinbarung zwischen beiden Teams getroffen werden, welche die Schnittstelle (Klassen-Interfaces, REST API o.ä.) verbindlich beschreibt. So kann ich die Entwicklung parallel geschehen und Abweichungen würde die vorherige Genehmigung des anderen Teams benötigen.
+
+Als organisatorische Maßnahme sollte es Meetings zwischen beiden Teams (beziehungsweise Vertretern deren) geben.
+Dies schafft Transparenz zwischen den Teams bezüglich Zeitplänen und erlaubt die Klärung von technischen Fragen oder sogar möglichen notwendigen / gewünschten Änderungen.

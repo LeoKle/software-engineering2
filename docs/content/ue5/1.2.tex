@@ -1,0 +1,215 @@
+\subsection*{Aufgabe 1.2: Implementierung der Audit-Logik}
+
+\begin{lstlisting}[style=javastyle, caption=IAuditLog]
+package teaching.swe;
+
+import java.util.List;
+
+public interface IAuditLog {
+    public void log(LogEntry entry);
+
+    public List<LogEntry> getLogs();
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption=InMemoryAuditLog]
+package teaching.swe;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class InMemoryAuditLog implements IAuditLog {
+    private List<LogEntry> logs = new ArrayList<LogEntry>();
+
+    @Override
+    public void log(LogEntry entry) {
+        this.logs.add(entry);
+    }
+
+    @Override
+    public List<LogEntry> getLogs() {
+        return this.logs;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={LogEntry}]
+package teaching.swe;
+
+public class LogEntry {
+    public enum LogType {
+        Add,
+        Remove
+    };
+
+    public LogType type;
+    public String name;
+
+    public LogEntry(LogType type, String name) {
+        this.type = type;
+        this.name = name;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={Änderung SimpleUserManager, damit UserManagerWithAudit Zugang zum Member users hat}]
+protected List<String> users = new ArrayList<String>();
+\end{lstlisting}
+
+
+\begin{lstlisting}[style=javastyle, caption={UserManagerWithAudit}]
+package teaching.swe;
+
+import teaching.swe.LogEntry;
+import teaching.swe.LogEntry.LogType;;
+
+public class UserManagerWithAudit extends SimpleUserManager {
+    IAuditLog logger;
+
+    public UserManagerWithAudit(IAuditLog logger) {
+        this.logger = logger;
+    }
+
+    @Override
+    public void addUser(String name) {
+        if (name == null)
+            return;
+
+        if (users.contains(name))
+            return;
+
+        users.add(name);
+        logger.log(new LogEntry(LogType.Add, name));
+    }
+
+    @Override
+    public void removeUser(String name) {
+        if (name == null)
+            return;
+
+        if (!users.contains(name))
+            return;
+
+        users.removeIf(user -> user.equals(name));
+        logger.log(new LogEntry(LogType.Remove, name));
+    }
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={UserManagerWithAuditTest}]
+package teaching.swe;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class UserManagerWithAuditTest {
+    private SimpleUserManager um;
+    private IAuditLog logger;
+
+    @BeforeEach
+    void setUp() {
+        this.logger = new InMemoryAuditLog();
+        this.um = new UserManagerWithAudit(logger);
+    }
+
+    @Test
+    void testAddNullUserDoesNotChangeList() {
+        this.um.addUser(null);
+        assertEquals(0, um.getUsers().size());
+
+        assertEquals(0, logger.getLogs().size());
+    }
+
+    @Test
+    void testRemoveUserOnEmptyListDoesNothing() {
+        this.um.removeUser("non-existent-user");
+        assertEquals(0, um.getUsers().size());
+
+        assertEquals(0, logger.getLogs().size());
+    }
+
+    @Test
+    void testRemoveNullDoesNothing() {
+        this.um.removeUser(null);
+        assertEquals(0, um.getUsers().size());
+
+        assertEquals(0, logger.getLogs().size());
+    }
+
+    @Test
+    void testAddSingleUser() {
+        this.um.addUser("user1");
+        assertEquals(1, um.getUsers().size());
+        assertTrue(um.getUsers().contains("user1"));
+
+        assertEquals(1, logger.getLogs().size());
+    }
+
+    @Test
+    void testAddDuplicateUsers() {
+        this.um.addUser("user1");
+        this.um.addUser("user1");
+        assertEquals(1, um.getUsers().size());
+
+        assertEquals(1, logger.getLogs().size());
+    }
+
+    @Test
+    void testRemoveExistingUser() {
+        this.um.addUser("user1");
+        this.um.removeUser("user1");
+        assertEquals(0, um.getUsers().size());
+
+        assertEquals(2, logger.getLogs().size());
+    }
+
+    @Test
+    void testRemoveSameUserTwice() {
+        this.um.addUser("user1");
+        this.um.removeUser("user1");
+        this.um.removeUser("user1"); // should do nothing
+        assertEquals(0, um.getUsers().size());
+        assertEquals(2, logger.getLogs().size());
+    }
+
+    @Test
+    void testAddMultipleUsersAndRemoveInOrder() {
+        this.um.addUser("user1");
+        this.um.addUser("user2");
+        this.um.addUser("user3");
+
+        assertEquals(3, um.getUsers().size());
+        assertEquals(3, logger.getLogs().size());
+
+        this.um.removeUser("user1");
+        assertEquals(2, um.getUsers().size());
+        assertEquals(4, logger.getLogs().size());
+
+        this.um.removeUser("user2");
+        assertEquals(1, um.getUsers().size());
+        assertEquals(5, logger.getLogs().size());
+
+        this.um.removeUser("user3");
+        assertEquals(0, um.getUsers().size());
+        assertEquals(6, logger.getLogs().size());
+    }
+
+    @Test
+    void testAddAndRemoveOutOfOrder() {
+        this.um.addUser("user1");
+        this.um.addUser("user2");
+        this.um.addUser("user3");
+
+        this.um.removeUser("user2");
+        assertEquals(2, um.getUsers().size());
+        assertEquals(4, logger.getLogs().size());
+        assertTrue(um.getUsers().contains("user1"));
+        assertTrue(um.getUsers().contains("user3"));
+    }
+}
+
+\end{lstlisting}

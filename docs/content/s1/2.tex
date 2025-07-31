@@ -1,0 +1,184 @@
+\subsection*{Aufgabe 2: Testfallanalyse mittels Äquivalenzklassen und Grenzwertanalyse}
+
+\subsubsection*{EmailChecker}
+(a) Äquivalenzklassen\\
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Gültige Klassen:}
+\begin{itemize}
+    \item Simple: \\ name@adresse.de
+    \item Mit Subdomain: \\ name1.name2@example.subdomain.org
+    \item Local-Part: \\ name1.name2+tag@example.org
+    \item Sonderzeichen (! \_ - etc.): \\ name!@domain.com
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Ungültige Klassen:}
+\begin{itemize}
+    \item kein @-Zeichen: \\ name1.name2.de
+    \item mehrere @-Zeichen: \\ name1@name2@de
+    \item keine Domain: \\ name1@name2
+    \item Leerzeichen: \\ name1 @name2.de
+\end{itemize}
+\end{minipage}
+
+\vspace{1em}
+
+(b) Grenzwertanalyse
+\begin{itemize}
+    \item Null
+    \item Empty String
+    \item Whitespace String
+\end{itemize}
+
+(c) Testfälle\\
+\begin{tabular}{ c | c }
+ Eingabe & Erwartetes Ergebnis \\
+ \hline
+ ``name@domain.de'' & True  \\
+ ``name.name@domain.de'' & True  \\
+ ``name-name@domain.com'' & True  \\
+ ``name!name@domain.com'' & True  \\
+ \hline
+ Null & False  \\  
+ Empty String & False  \\
+ Whitespace String & False  \\
+ ``name.@@domain.de'' & False \\
+ ``@domain.de'' & False \\
+ ``name@'' & False \\
+ ``name@domain'' & False \\
+ ``name@domain.'' & False \\
+ ``name @domain.de'' & False \\
+\end{tabular}
+
+\subsubsection*{PasswordChecker}
+(a) Äquivalenzklassen\\
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Gültige Klassen:}
+\begin{itemize}
+    \item minimale Länge: \\ Abcdef1!
+    \item maximale Länge: \\ Abcdefghijklmnopqr1!
+    \item beliebige Reihenfolge: \\ !Bcdefghijklmnopqr1!
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Ungültige Klassen:}
+\begin{itemize}
+    \item Null
+    \item minimale Länge: \\ Abcd1! 
+    \item maximale Länge: \\ Abcdefghijklmnopqrstuvw1! 
+    % \item kein Uppercase: \\ abcdefghijklmnopqr1! 
+    % \item kein Lowercase: \\ ABCDEFGHIJKLMNOPQR1! 
+    % \item keine Zahl: \\ AbcdefghijklmnopqrS! 
+    % \item kein Sonderzeichen: \\ Abcdefghijklmnopqr1a
+    % nicht erlaubtes Sonderzeichen
+    % nur Zahlen, Lowercase, Uppercase, Sonderzeichen
+    % mehrere von Zahlen, Lowercase, Uppercase, Sonderzeichen fehlen
+\end{itemize}
+\end{minipage}
+
+\vspace{1em}
+
+(b) Grenzwertanalyse
+\begin{itemize}
+    \item Null
+    \item Passwort mit Whitespace
+    \item nicht erlaubte Sonderzeichen
+    \item Escape-Characters 
+\end{itemize}
+
+(c) Testfälle\\
+\begin{tabular}{ c | c }
+ Eingabe & Erwartetes Ergebnis \\
+ \hline
+ Abcdef1! & True  \\
+ Abcdefghijklmnopqr1!! & True  \\
+ !Bcdefghijklmnopqr1! & True  \\
+ \hline
+ Null & False \\  
+ Abcd1!  & False \\  
+ Abcdefghijklmnopqrstuvw1!  & False \\  
+\end{tabular}
+
+\subsubsection*{RegistrationValidator}
+(a) Äquivalenzklassen\\
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Gültige Klassen:}
+\begin{itemize}
+    \item Gültige Email, Password und Username: \\ name@domain.de, Abcdef1!, validUser123
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Ungültige Klassen:}
+\begin{itemize}
+    \item Ungültige Email: \\ name1.name2.de
+    \item Ungültige Password: \\ Abcdef1!
+    \item Ungültige Username: \\ user name
+\end{itemize}
+\end{minipage}
+
+\vspace{1em}
+
+(b) Grenzwertanalyse
+\begin{itemize}
+    \item Null
+    \item Mehrere Leerzeichen 
+\end{itemize}
+
+(c) Testfälle\\
+\begin{tabular}{ c | c }
+ Eingabe & Erwartetes Ergebnis \\
+ \hline
+ name@domain.de, Abcdef1!, validUser123 & True  \\
+ \hline
+ Null & False  \\  
+\end{tabular}
+
+\subsubsection*{UsernameChecker}
+(a) Äquivalenzklassen\\
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Gültige Klassen:}
+\begin{itemize}
+    \item Alphabeten und Zahlen: \\ validUser123
+    \item Undercore: \\ user\_name
+    \item Nur Zahlen: \\ 123456789
+    \item Nur Alphabeten: \\ abcdefg
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\textbf{Ungültige Klassen:}
+\begin{itemize}
+    \item Null
+    \item Name mit Leerzeichen: \\ user name
+    \item Special Chars: \\ user@name
+    \item minimale Länge: \\ abc
+    \item maximale Länge: \\ thisusernameiswaytoolongtobevalid
+\end{itemize}
+\end{minipage}
+
+\vspace{1em}
+
+(b) Grenzwertanalyse
+\begin{itemize}
+    \item Null
+    \item Username mit mehrere Underscores
+    \item Username mit Lerrzeichen
+    \item Sonderzeichen 
+\end{itemize}
+
+(c) Testfälle \\
+\begin{tabular}{ c | c }
+ Eingabe & Erwartetes Ergebnis \\
+ \hline
+ validUser123 & True  \\
+ user\_name & True \\
+ 123456789 & True \\
+ abcdefg & True \\
+ \hline
+ Null & False  \\  
+ user name & False \\
+ user@name & False \\
+\end{tabular}

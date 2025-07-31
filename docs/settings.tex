@@ -1,0 +1,33 @@
+\setlength\parindent{0pt}
+\renewcommand{\labelitemi}{--}
+
+\definecolor{codecomment}{rgb}{0,0.5,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codestring}{rgb}{0.58,0,0.82}
+
+\setmonofont{JetBrains Mono}[
+    Contextuals = Alternate,
+    Ligatures = TeX,
+]
+
+\lstset{
+    basicstyle = \ttfamily\footnotesize,
+    columns = flexible,
+}
+
+\lstdefinestyle{javastyle}{
+    language=Java,
+    basicstyle=\ttfamily\small, % Will use JetBrains Mono
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{teal},
+    commentstyle=\color{gray}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=10pt,
+    tabsize=2,
+    showspaces=false,
+    showstringspaces=false,
+    breaklines=true,
+    backgroundcolor=\color{gray!5}
+}

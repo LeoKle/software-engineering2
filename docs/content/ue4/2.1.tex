@@ -1,0 +1,40 @@
+\subsection*{Aufgabe 2.1. Authentifizierungsprüfung}
+
+\begin{lstlisting}[style=javastyle]
+public boolean checkAuth(String user, String password) {
+        for (String[] credentials : this.userCredentials) {
+            final boolean isUser = credentials[0].equals(user);
+            if (!isUser)
+                continue;
+
+            final boolean correctPassword = credentials[1].equals(password);
+            return correctPassword;
+        }
+
+        return false;
+    }
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle]
+public class StreamingApplicationTest {
+@Test
+public void testCheckAuthValidUser() {
+    StreamingApplication sa = new StreamingApplication();
+
+    Assertions.assertTrue(sa.checkAuth("User1", "PasswortA"));
+    Assertions.assertTrue(sa.checkAuth("User2", "PasswortB"));
+    Assertions.assertTrue(sa.checkAuth("User3", "PasswortC"));
+    Assertions.assertTrue(sa.checkAuth("User4", "PasswortC"));
+}
+
+@Test
+public void testCheckAuthInvalidUser() {
+    StreamingApplication sa = new StreamingApplication();
+
+    Assertions.assertFalse(sa.checkAuth("User", "PasswortA"));
+    Assertions.assertFalse(sa.checkAuth("User2", "PasswortD"));
+    Assertions.assertFalse(sa.checkAuth("", "PasswortC"));
+    Assertions.assertFalse(sa.checkAuth("\t\n#124124", "PasswortC"));
+}
+}
+\end{lstlisting}

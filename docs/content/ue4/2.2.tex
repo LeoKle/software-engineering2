@@ -1,0 +1,113 @@
+\subsection*{Aufgabe 2.2. Refactoring der Authentifizierung}
+
+\begin{lstlisting}[style=javastyle]
+package teaching.swe.streaming;
+
+public class LoginManager {
+    private String[][] userCredentials = {
+            { "User1", "PasswortA" },
+            { "User2", "PasswortB" },
+            { "User3", "PasswortC" },
+            { "User4", "PasswortC" }
+    };
+
+    public boolean checkAuth(String user, String password) {
+        for (String[] credentials : this.userCredentials) {
+            final boolean isUser = credentials[0].equals(user);
+            if (!isUser)
+                continue;
+
+            final boolean correctPassword = credentials[1].equals(password);
+            return correctPassword;
+        }
+
+        return false;
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}[style=javastyle]
+package teaching.swe.streaming;
+
+import java.util.List;
+
+import teaching.swe.streaming.fraud.FraudDetection;
+import teaching.swe.streaming.fraud.IFraudDetection;
+import teaching.swe.streaming.recommender.IRecommenderSystem;
+import teaching.swe.streaming.recommender.RecommenderSystem;
+import teaching.swe.streaming.LoginManager;
+
+public class StreamingApplication {
+
+    private final IRecommenderSystem rs;
+    private final IFraudDetection fd;
+    private final LoginManager lm;
+
+    private int volumeLevel = 50;
+
+    public StreamingApplication() {
+        this.rs = new RecommenderSystem();
+        this.fd = new FraudDetection();
+        this.lm = new LoginManager();
+    }
+
+    public StreamingApplication(IRecommenderSystem rs, IFraudDetection fd) {
+        this.rs = rs;
+        this.fd = fd;
+        this.lm = new LoginManager();
+    }
+
+    public int setVolume(int level) {
+        if (level < 0 || level > 100) {
+            return -1;
+        } else {
+            this.volumeLevel = level;
+            return level;
+        }
+    }
+
+    public int getVolume() {
+        return this.volumeLevel;
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        boolean successful = !fd.isFraud(request);
+        List<String> recommendations = rs.recommend(request);
+
+        LoginResponse response = new LoginResponse();
+        response.setSuccessful(successful);
+        response.setRecommendations(recommendations);
+
+        return response;
+    }
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle]
+package teaching.swe.streaming;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+public class LoginManagerTest {
+    @Test
+    public void testCheckAuthValid() {
+        LoginManager lm = new LoginManager();
+
+        Assertions.assertTrue(lm.checkAuth("User1", "PasswortA"));
+        Assertions.assertTrue(lm.checkAuth("User2", "PasswortB"));
+        Assertions.assertTrue(lm.checkAuth("User3", "PasswortC"));
+        Assertions.assertTrue(lm.checkAuth("User4", "PasswortC"));
+    }
+
+    @Test
+    public void testCheckAuthInvalid() {
+        LoginManager lm = new LoginManager();
+
+        Assertions.assertFalse(lm.checkAuth("User", "PasswortA"));
+        Assertions.assertFalse(lm.checkAuth("User2", "PasswortD"));
+        Assertions.assertFalse(lm.checkAuth("", "PasswortC"));
+        Assertions.assertFalse(lm.checkAuth("\t\n#124124", "PasswortC"));
+    }
+}
+\end{lstlisting}

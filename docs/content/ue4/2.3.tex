@@ -1,0 +1,154 @@
+\subsection*{Aufgabe 2.3. Verwendung von Mocks}
+
+\begin{lstlisting}[style=javastyle, caption=ILoginManager]
+package teaching.swe.streaming;
+
+public interface ILoginManager {
+    public boolean checkAuth(String user, String password);
+}
+
+\end{lstlisting}
+\begin{lstlisting}[style=javastyle, caption=LoginManager implements ILoginManager]
+package teaching.swe.streaming;
+
+public class LoginManager implements ILoginManager {
+    private String[][] userCredentials = {
+            { "User1", "PasswortA" },
+            { "User2", "PasswortB" },
+            { "User3", "PasswortC" },
+            { "User4", "PasswortC" }
+    };
+
+    @Override
+    public boolean checkAuth(String user, String password) {
+        for (String[] credentials : this.userCredentials) {
+            final boolean isUser = credentials[0].equals(user);
+            if (!isUser)
+                continue;
+
+            final boolean correctPassword = credentials[1].equals(password);
+            return correctPassword;
+        }
+
+        return false;
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}[style=javastyle, caption=LoginManagerMock]
+package teaching.swe.streaming;
+
+public class LoginManagerMock implements ILoginManager {
+    private boolean returnValue;
+
+    public LoginManagerMock(boolean returnValue) {
+        this.returnValue = returnValue;
+    }
+
+    @Override
+    public boolean checkAuth(String user, String password) {
+        return returnValue;
+    }
+}
+
+\end{lstlisting}
+\begin{lstlisting}[style=javastyle, caption=Dependency Injection des ILoginManagers in SA]
+package teaching.swe.streaming;
+
+import java.util.List;
+
+import teaching.swe.streaming.fraud.FraudDetection;
+import teaching.swe.streaming.fraud.IFraudDetection;
+import teaching.swe.streaming.recommender.IRecommenderSystem;
+import teaching.swe.streaming.recommender.RecommenderSystem;
+import teaching.swe.streaming.ILoginManager;
+import teaching.swe.streaming.LoginManager;
+
+public class StreamingApplication {
+
+    private final IRecommenderSystem rs;
+    private final IFraudDetection fd;
+    private final ILoginManager lm;
+
+    private int volumeLevel = 50;
+
+    public StreamingApplication() {
+        this.rs = new RecommenderSystem();
+        this.fd = new FraudDetection();
+        this.lm = new LoginManager();
+    }
+
+    public StreamingApplication(IRecommenderSystem rs, IFraudDetection fd, ILoginManager lm) {
+        this.rs = rs;
+        this.fd = fd;
+        this.lm = lm;
+    }
+
+    public int setVolume(int level) {
+        if (level < 0 || level > 100) {
+            return -1;
+        } else {
+            this.volumeLevel = level;
+            return level;
+        }
+    }
+
+    public int getVolume() {
+        return this.volumeLevel;
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        boolean successful = !fd.isFraud(request);
+        List<String> recommendations = rs.recommend(request);
+
+        this.lm.checkAuth(null, null); // TODO: placeholder 2.4
+
+        LoginResponse response = new LoginResponse();
+        response.setSuccessful(successful);
+        response.setRecommendations(recommendations);
+
+        return response;
+    }
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[style=javastyle, caption={Unittests für login() (Failen, Methode wird in 2.4 angepasst)}]
+public class StreamingApplicationTest {
+[...]
+    @Test
+    public void testLoginValid() {
+        IRecommenderSystem rs = new RecommenderSystemMock();
+        IFraudDetection fd = new FraudDetectionMock();
+        ILoginManager lm = new LoginManagerMock(true);
+        StreamingApplication sa = new StreamingApplication(rs, fd, lm);
+    
+        LoginRequest request = new LoginRequest();
+        request.setLocation("DE");
+        request.setUserName("Test User");
+        request.setPassword("Test PWD");
+    
+        LoginResponse response = sa.login(request);
+    
+        assertTrue(response.isSuccessful());
+        assertEquals(Arrays.asList("Dummy Movie A"), response.getRecommendations());
+    }
+    
+    @Test
+    public void testLoginInvalid() {
+        IRecommenderSystem rs = new RecommenderSystemMock();
+        IFraudDetection fd = new FraudDetectionMock();
+        ILoginManager lm = new LoginManagerMock(false);
+        StreamingApplication sa = new StreamingApplication(rs, fd, lm);
+    
+        LoginRequest request = new LoginRequest();
+        request.setLocation("DE");
+        request.setUserName("Test User");
+        request.setPassword("Test PWD");
+    
+        LoginResponse response = sa.login(request);
+    
+        assertFalse(response.isSuccessful());
+        assertTrue(response.getRecommendations().isEmpty());
+    }
+}
+\end{lstlisting}
